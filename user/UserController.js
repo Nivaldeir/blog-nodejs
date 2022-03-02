@@ -17,6 +17,7 @@ router.post('/users/create', (req, res)=>{
     var password = req.body.password;
 
     User.findOne({where: {email:email}}).then( user=>{
+        console.log(user)
         if(user == undefined){
             var salt = bcrypt.genSaltSync(10);
             var hash = bcrypt.hashSync(password, salt);
@@ -31,8 +32,6 @@ router.post('/users/create', (req, res)=>{
             res.redirect('/admin/users/create')
         }
     })
-
-
 })
 
 router.get('/login', (req ,res)=>{
@@ -48,14 +47,16 @@ router.post('/authenticate', (req, res)=>{
             email: email
         }
     }).then(user =>{
-        if(user!= undefined){
+        if(user != undefined){
             //Validar a senha
             var correct = bcrypt.compareSync(password,  user.password)
+            console.log(correct)
             if(correct){
                 req.session.user = {
                     id: user.id,
                     email: user.email
                 }
+                res.redirect("/admin/articles");
             }else{
                 res.redirect('/login')
             }
@@ -63,5 +64,10 @@ router.post('/authenticate', (req, res)=>{
             res.redirect('/login')
         }
     })
+})
+
+router.get('/logout', (req, res)=>{
+    req.session.user = undefined;
+    res.redirect('/')
 })
 module.exports = router;

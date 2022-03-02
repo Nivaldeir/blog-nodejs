@@ -11,6 +11,7 @@ const UserController = require('./user/UserController');
 const Article = require('./articles/Article')
 const Category = require('./categories/Category')
 const User = require('./user/User')
+
 //View engine
 app.set('view engine', 'ejs')
 
